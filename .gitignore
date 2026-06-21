@@ -1,0 +1,15 @@
+# Unreal Engine generated folders
+DerivedDataCache/
+Intermediate/
+Saved/
+Binaries/
+
+# Visual Studio
+.vs/
+*.sln
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
+*.vcxproj
+*.vcxproj.filters
