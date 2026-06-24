@@ -16,9 +16,14 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	void SetupInputMappingContext();
+
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<class USpringArmComponent> SpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere, Category="Camera")
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<class UCameraComponent> CameraComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 };
