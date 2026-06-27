@@ -13,3 +13,6 @@ Binaries/
 *.VC.opendb
 *.vcxproj
 *.vcxproj.filters
+
+# JetBrains Rider
+.idea/
