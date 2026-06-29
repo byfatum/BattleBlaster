@@ -22,6 +22,7 @@ protected:
 private:
 	void SetupInputMappingContext();
 	void MoveInput(const struct FInputActionValue& Value);
+	void TurnInput(const struct FInputActionValue& Value);
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<class USpringArmComponent> SpringArmComponent;
@@ -29,9 +30,18 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<class UCameraComponent> CameraComponent;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<class UInputAction> MoveAction;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<class UInputAction> TurnAction;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Speed")
+	float MoveSpeed = 500.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Speed")
+	float TurnRate = 125.0f;
 };
