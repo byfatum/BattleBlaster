@@ -16,6 +16,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -44,4 +45,10 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Speed")
 	float TurnRate = 125.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Sphere")
+	float SphereRadius = 20.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Sphere")
+	int SphereSegments = 20;
 };

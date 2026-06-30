@@ -27,6 +27,23 @@ void ATank::BeginPlay()
 	Super::BeginPlay();
 }
 
+void ATank::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	const APlayerController* const PlayerController = Cast<APlayerController>(GetController());
+	if (!PlayerController) return;
+	
+	FHitResult HitResult;
+	if (PlayerController->GetHitResultUnderCursor(ECC_GameTraceChannel1, false, HitResult))
+	{
+		const FVector AimWorldLocation = HitResult.ImpactPoint;
+	
+		DrawDebugSphere(GetWorld(), AimWorldLocation, SphereRadius, SphereSegments, FColor::Green);
+		this->RotateTurretTo(AimWorldLocation, DeltaTime);
+	}
+}
+
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
