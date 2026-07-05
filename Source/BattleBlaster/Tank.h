@@ -2,8 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "BasePawn.h"
-
 #include "Tank.generated.h"
+
+class UCameraComponent;
+class UInputAction;
+class UInputComponent;
+class UInputMappingContext;
+class USpringArmComponent;
 
 UCLASS()
 class BATTLEBLASTER_API ATank : public ABasePawn
@@ -18,7 +23,7 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 private:
 	void SetupInputMappingContext();
@@ -26,19 +31,19 @@ private:
 	void TurnInput(const struct FInputActionValue& Value);
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
-	TObjectPtr<class USpringArmComponent> SpringArmComponent;
+	TObjectPtr<USpringArmComponent> SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
-	TObjectPtr<class UCameraComponent> CameraComponent;
+	TObjectPtr<UCameraComponent> CameraComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<class UInputAction> MoveAction;
+	TObjectPtr<UInputAction> MoveAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<class UInputAction> TurnAction;
+	TObjectPtr<UInputAction> TurnAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Speed")
 	float MoveSpeed = 500.0f;
