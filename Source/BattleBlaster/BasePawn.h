@@ -4,6 +4,11 @@
 #include "GameFramework/Pawn.h"
 #include "BasePawn.generated.h"
 
+class UCapsuleComponent;
+class USceneComponent;
+class UStaticMeshComponent;
+class UTurretAimingComponent;
+
 UCLASS()
 class BATTLEBLASTER_API ABasePawn : public APawn
 {
@@ -11,20 +16,25 @@ class BATTLEBLASTER_API ABasePawn : public APawn
 
 public:
 	ABasePawn();
+	FVector GetAimTargetLocation() const;
 	
 protected:
 	void RotateTurretTo(const FVector& TargetLocation, float DeltaTime) const;
+	UStaticMeshComponent* GetTurretComponent() const;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	TObjectPtr<class UCapsuleComponent> CapsuleComponent;
+	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	TObjectPtr<class UStaticMeshComponent> BaseComponent;
+	TObjectPtr<UStaticMeshComponent> BaseComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	TObjectPtr<class UStaticMeshComponent> TurretComponent;
+	TObjectPtr<UStaticMeshComponent> TurretComponent;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	TObjectPtr<class UTurretAimingComponent> TurretAimingComponent;
+	TObjectPtr<UTurretAimingComponent> TurretAimingComponent;
+	
+	UPROPERTY(VisibleAnywhere, Category = "AimTargetComponent")
+	TObjectPtr<USceneComponent> AimTarget;
 };
