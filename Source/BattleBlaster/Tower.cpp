@@ -1,10 +1,19 @@
 #include "Tower.h"
-#include "Kismet/GameplayStatics.h"
+#include "Components/SceneComponent.h"
 #include "Components/SphereComponent.h"
+#include "CollisionQueryParams.h"
+#include "DrawDebugHelpers.h"
+#include "Engine/HitResult.h"
+#include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
+#include "Math/UnrealMathUtility.h"
 
 ATower::ATower()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	
+	SightOrigin = CreateDefaultSubobject<USceneComponent>(TEXT("SightOrigin"));
+	SightOrigin->SetupAttachment(this->GetTurretComponent());
 	
 	DetectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("DetectionSphere"));
 	DetectionSphere->SetupAttachment(GetRootComponent());
@@ -20,40 +29,35 @@ ATower::ATower()
 	DetectionSphere->OnComponentEndOverlap.AddDynamic(this, &ATower::OnSphereEndOverlap);
 }
 
-void ATower::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
-{
-	if (OtherActor == TargetPawn)
-	{
-		bIsTargetInRange = true;
-	}
-}
-
-void ATower::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
-{
-	if (OtherActor == TargetPawn)
-	{
-		bIsTargetInRange = false;
-	}
-}
-
 void ATower::BeginPlay()
 {
 	Super::BeginPlay();
 
 	TargetPawn = FindTargetPawn();
+	if (TargetPawn.IsValid())
+	{
+		bIsTargetInRange = DetectionSphere->IsOverlappingActor(TargetPawn.Get());
+	}
+	
+	InitialTurretRotation = this->GetTurretComponent()->GetRelativeRotation();
 }
 
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if (bIsTargetInRange)
+	if (CanTrackTarget())
 	{
-		if (const ABasePawn* const Target = TargetPawn.Get())
+		TimeWithoutTarget = 0.0f;
+		this->RotateTurretTo(TargetPawn.Get()->GetAimTargetLocation(), DeltaTime);
+	}
+	else
+	{
+		TimeWithoutTarget = FMath::Min(TimeWithoutTarget + DeltaTime, ReturnDelay);
+		
+		if (TimeWithoutTarget >= ReturnDelay)
 		{
-			this->RotateTurretTo(Target->GetActorLocation(), DeltaTime);
+			ReturnTurretToInitialRotation(DeltaTime);
 		}
 	}
 }
@@ -67,4 +71,65 @@ ABasePawn* ATower::FindTargetPawn() const
 	if (!PlayerPawn) return nullptr;
 	
 	return Cast<ABasePawn>(PlayerPawn);
+}
+
+bool ATower::HasLineOfSightToTarget(const ABasePawn* const Target) const
+{
+	const FCollisionQueryParams Params(SCENE_QUERY_STAT(TowerLineOfSight), false, this);
+	FHitResult OutHit;
+	
+	const bool bHit = GetWorld()->LineTraceSingleByChannel(
+		OutHit, 
+		SightOrigin->GetComponentLocation(), 
+		Target->GetAimTargetLocation(), 
+		ECC_GameTraceChannel2,
+		Params);
+	
+	const bool bHasLineOfSight = bHit && OutHit.GetActor() == Target;
+	
+	DrawDebugLine(
+		GetWorld(), 
+		SightOrigin->GetComponentLocation(), 
+		Target->GetAimTargetLocation(), 
+		bHasLineOfSight ? FColor::Green : FColor::Red, 
+		false, 
+		0.1f);
+	
+	return bHasLineOfSight;
+}
+
+bool ATower::CanTrackTarget() const
+{
+	const ABasePawn* const Target = TargetPawn.Get();
+	
+	return Target && bIsTargetInRange && HasLineOfSightToTarget(Target);
+}
+
+void ATower::ReturnTurretToInitialRotation(float DeltaTime)
+{
+	const FRotator NewRotation = FMath::RInterpConstantTo(
+				this->GetTurretComponent()->GetRelativeRotation(), 
+				InitialTurretRotation,
+				DeltaTime,
+				ReturnRotationSpeed);
+			
+	this->GetTurretComponent()->SetRelativeRotation(NewRotation, false);
+}
+
+void ATower::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
+{
+	if (OtherActor == TargetPawn.Get())
+	{
+		bIsTargetInRange = true;
+	}
+}
+
+void ATower::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
+{
+	if (OtherActor == TargetPawn.Get())
+	{
+		bIsTargetInRange = false;
+	}
 }
