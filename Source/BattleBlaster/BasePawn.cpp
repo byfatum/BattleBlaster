@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "TurretAimingComponent.h"
+#include "Engine/StaticMeshSocket.h"
 
 ABasePawn::ABasePawn()
 {
@@ -39,4 +40,24 @@ void ABasePawn::RotateTurretTo(const FVector& TargetLocation, float DeltaTime) c
 UStaticMeshComponent* ABasePawn::GetTurretComponent() const
 {
 	return TurretComponent.Get();
+}
+
+void ABasePawn::Fire()
+{
+	const FName MuzzleSocketName("Muzzle");
+	
+	if (TurretComponent->DoesSocketExist(MuzzleSocketName))
+	{
+		const FVector SocketLocation = TurretComponent->GetSocketLocation(MuzzleSocketName);
+		
+		DrawDebugSphere(
+			GetWorld(), 
+			SocketLocation, 
+			16, 
+			16, 
+			FColor::Green, 
+			false,
+			1.0f
+		);
+	}
 }

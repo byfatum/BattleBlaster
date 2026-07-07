@@ -21,6 +21,7 @@ public:
 protected:
 	void RotateTurretTo(const FVector& TargetLocation, float DeltaTime) const;
 	UStaticMeshComponent* GetTurretComponent() const;
+	void Fire();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
