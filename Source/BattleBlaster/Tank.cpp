@@ -58,6 +58,9 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	if (!TurnAction) return;
 	EnhancedInput->BindAction(TurnAction.Get(), ETriggerEvent::Triggered, this, &ATank::TurnInput);
+	
+	if (!FireAction) return;
+	EnhancedInput->BindAction(FireAction.Get(), ETriggerEvent::Started, this, &ATank::Fire);
 }
 
 void ATank::SetupInputMappingContext() 

@@ -45,6 +45,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> TurnAction;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> FireAction;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Speed")
 	float MoveSpeed = 500.0f;
 	
