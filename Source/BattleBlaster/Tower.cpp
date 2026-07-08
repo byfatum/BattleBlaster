@@ -48,14 +48,30 @@ void ATower::Tick(float DeltaTime)
 	
 	if (CanTrackTarget())
 	{
-		TimeWithoutTarget = 0.0f;
+		NoTargetElapsedTime = 0.0f;
 		this->RotateTurretTo(TargetPawn.Get()->GetAimTargetLocation(), DeltaTime);
+		
+		if (IsAlignedToAimTarget())
+		{
+			AimLockElapsedTime = FMath::Min(AimLockElapsedTime + DeltaTime, AimLockDuration);
+			
+			if (AimLockElapsedTime >= AimLockDuration)
+			{
+				this->Fire();
+				AimLockElapsedTime = 0.0f;
+			}
+		} 
+		else
+		{
+			AimLockElapsedTime = 0.0f;
+		}
 	}
 	else
 	{
-		TimeWithoutTarget = FMath::Min(TimeWithoutTarget + DeltaTime, ReturnDelay);
+		NoTargetElapsedTime = FMath::Min(NoTargetElapsedTime + DeltaTime, ReturnDelay);
+		AimLockElapsedTime = 0.0f;
 		
-		if (TimeWithoutTarget >= ReturnDelay)
+		if (NoTargetElapsedTime >= ReturnDelay)
 		{
 			ReturnTurretToInitialRotation(DeltaTime);
 		}
@@ -103,6 +119,21 @@ bool ATower::CanTrackTarget() const
 	const ABasePawn* const Target = TargetPawn.Get();
 	
 	return Target && bIsTargetInRange && HasLineOfSightToTarget(Target);
+}
+
+bool ATower::IsAlignedToAimTarget() const
+{
+	const FTransform MuzzleTransform = GetTurretComponent()->GetSocketTransform("Muzzle");
+	
+	const FVector2D MuzzleXYLocation(MuzzleTransform.GetLocation());
+	const FVector2D TargetXYLocation(TargetPawn.Get()->GetAimTargetLocation());
+	
+	const FVector2D DirectionXYToTarget = (TargetXYLocation - MuzzleXYLocation).GetSafeNormal();
+	const FVector2D MuzzleForwardXY(MuzzleTransform.GetUnitAxis(EAxis::X));
+	
+	const float Dot = FVector2D::DotProduct(DirectionXYToTarget, MuzzleForwardXY);
+	
+	return Dot >= FMath::Cos(FMath::DegreesToRadians(AimToleranceDegrees));
 }
 
 void ATower::ReturnTurretToInitialRotation(float DeltaTime)
