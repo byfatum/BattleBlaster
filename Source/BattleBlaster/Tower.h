@@ -34,28 +34,28 @@ private:
 	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
-	UPROPERTY(VisibleAnywhere, Category = "TargetPawn")
+	UPROPERTY(VisibleAnywhere, Category = "Tracking")
 	TWeakObjectPtr<ABasePawn> TargetPawn;
 	
-	UPROPERTY(VisibleAnywhere, Category = "DetectionRange")
+	UPROPERTY(VisibleAnywhere, Category = "Tracking")
 	TObjectPtr<USphereComponent> DetectionSphere;
 	
-	UPROPERTY(VisibleAnywhere, Category = "SightOrigin")
+	UPROPERTY(VisibleAnywhere, Category = "Tracking")
 	TObjectPtr<USceneComponent> SightOrigin;
 	
-	UPROPERTY(VisibleAnywhere, Category = "DetectionRange")
+	UPROPERTY(VisibleAnywhere, Category = "Tracking")
 	bool bIsTargetInRange = false;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "ReturnDelay")
+	UPROPERTY(EditDefaultsOnly, Category = "Tracking")
 	float ReturnDelay = 2.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "ReturnRotationSpeed")
+	UPROPERTY(EditDefaultsOnly, Category = "Tracking")
 	float ReturnRotationSpeed = 100.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Aim")
+	UPROPERTY(EditDefaultsOnly, Category = "Aiming")
 	float AimLockDuration = 2.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Aim")
+	UPROPERTY(EditDefaultsOnly, Category = "Aiming")
 	float AimToleranceDegrees = 10.0f;
 	
 	FRotator InitialTurretRotation = FRotator::ZeroRotator;

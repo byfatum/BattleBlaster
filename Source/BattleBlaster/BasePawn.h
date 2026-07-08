@@ -27,15 +27,15 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, Category = "Visual")
 	TObjectPtr<UStaticMeshComponent> BaseComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, Category = "Visual")
 	TObjectPtr<UStaticMeshComponent> TurretComponent;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, Category = "Aiming")
 	TObjectPtr<UTurretAimingComponent> TurretAimingComponent;
 	
-	UPROPERTY(VisibleAnywhere, Category = "AimTargetComponent")
+	UPROPERTY(VisibleAnywhere, Category = "Aiming")
 	TObjectPtr<USceneComponent> AimTarget;
 };

@@ -48,15 +48,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> FireAction;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Speed")
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float MoveSpeed = 500.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Speed")
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float TurnRate = 125.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Sphere")
+	UPROPERTY(EditDefaultsOnly, Category = "Debug")
 	float SphereRadius = 20.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Sphere")
+	UPROPERTY(EditDefaultsOnly, Category = "Debug")
 	int SphereSegments = 20;
 };
