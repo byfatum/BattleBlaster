@@ -19,11 +19,8 @@ ATower::ATower()
 	DetectionSphere->SetupAttachment(GetRootComponent());
 	
 	DetectionSphere->SetGenerateOverlapEvents(true);
+	DetectionSphere->SetCollisionProfileName(TEXT("TowerDetection"));
 	DetectionSphere->SetSphereRadius(1000.0f);
-	DetectionSphere->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-	DetectionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	DetectionSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	DetectionSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	
 	DetectionSphere->OnComponentBeginOverlap.AddDynamic(this, &ATower::OnSphereBeginOverlap);
 	DetectionSphere->OnComponentEndOverlap.AddDynamic(this, &ATower::OnSphereEndOverlap);
