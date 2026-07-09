@@ -12,12 +12,18 @@ ABasePawn::ABasePawn()
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
 	SetRootComponent(CapsuleComponent);
+	CapsuleComponent->SetGenerateOverlapEvents(true);
+	CapsuleComponent->SetCollisionProfileName(TEXT("MovementBody"));
 
 	BaseComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseComponent"));
 	BaseComponent->SetupAttachment(CapsuleComponent);
+	BaseComponent->SetGenerateOverlapEvents(false);
+	BaseComponent->SetCollisionProfileName(TEXT("CombatHitbox"));
 
 	TurretComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretComponent"));
 	TurretComponent->SetupAttachment(BaseComponent);
+	TurretComponent->SetGenerateOverlapEvents(false);
+	TurretComponent->SetCollisionProfileName(TEXT("CombatHitbox"));
 	
 	TurretAimingComponent = CreateDefaultSubobject<UTurretAimingComponent>(TEXT("TurretAimingComponent"));
 	TurretAimingComponent->SetTurretComponent(TurretComponent);
@@ -49,6 +55,16 @@ void ABasePawn::Fire()
 	if (TurretComponent->DoesSocketExist(MuzzleSocketName))
 	{
 		const FVector SocketLocation = TurretComponent->GetSocketLocation(MuzzleSocketName);
+		const FRotator SocketRotation = TurretComponent->GetSocketRotation(MuzzleSocketName);
+		
+		AProjectile* const Projectile = GetWorld()->SpawnActor<AProjectile>(
+			ProjectileType, 
+			SocketLocation, 
+			SocketRotation
+			);
+		
+		Projectile->SetInstigator(this);
+		const APawn* const ProjectileInstigator = Projectile->GetInstigator();
 		
 		DrawDebugSphere(
 			GetWorld(), 

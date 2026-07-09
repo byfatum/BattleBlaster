@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Projectile.h"
 #include "BasePawn.generated.h"
 
 class UCapsuleComponent;
@@ -38,4 +39,7 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Aiming")
 	TObjectPtr<USceneComponent> AimTarget;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<AProjectile> ProjectileType;
 };
