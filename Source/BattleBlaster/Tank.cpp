@@ -17,7 +17,13 @@ ATank::ATank()
 	
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(GetRootComponent());
-
+	
+	SpringArmComponent->bEnableCameraLag = true;
+	SpringArmComponent->CameraLagSpeed = 10.0f;
+	
+	SpringArmComponent->bEnableCameraRotationLag = true;
+	SpringArmComponent->CameraRotationLagSpeed = 10.0f;
+	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 }
