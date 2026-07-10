@@ -6,6 +6,7 @@
 #include "BasePawn.generated.h"
 
 class UCapsuleComponent;
+class UHealthComponent;
 class USceneComponent;
 class UStaticMeshComponent;
 class UTurretAimingComponent;
@@ -40,6 +41,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Aiming")
 	TObjectPtr<USceneComponent> AimTarget;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UPROPERTY(EditDefaultsOnly, Category = "Combat | Damage")
 	TSubclassOf<AProjectile> ProjectileType;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Combat | Health")
+	TObjectPtr<UHealthComponent> HealthComponent;
 };

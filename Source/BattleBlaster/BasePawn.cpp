@@ -3,8 +3,10 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Engine/World.h"
+#include "GameFramework/Actor.h"
+#include "HealthComponent.h"
 #include "TurretAimingComponent.h"
-#include "Engine/StaticMeshSocket.h"
 
 ABasePawn::ABasePawn()
 {
@@ -30,6 +32,8 @@ ABasePawn::ABasePawn()
 	
 	AimTarget = CreateDefaultSubobject<USceneComponent>(TEXT("AimTargetComponent"));
 	AimTarget->SetupAttachment(TurretComponent);
+	
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 FVector ABasePawn::GetAimTargetLocation() const
@@ -57,13 +61,17 @@ void ABasePawn::Fire()
 		const FVector SocketLocation = TurretComponent->GetSocketLocation(MuzzleSocketName);
 		const FRotator SocketRotation = TurretComponent->GetSocketRotation(MuzzleSocketName);
 		
-		AProjectile* const Projectile = GetWorld()->SpawnActor<AProjectile>(
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.Owner = this;
+		SpawnParameters.Instigator = this;
+		
+		const AProjectile* const Projectile = GetWorld()->SpawnActor<AProjectile>(
 			ProjectileType, 
 			SocketLocation, 
-			SocketRotation
+			SocketRotation,
+			SpawnParameters
 			);
-		
-		Projectile->SetInstigator(this);
+
 		const APawn* const ProjectileInstigator = Projectile->GetInstigator();
 		
 		DrawDebugSphere(
