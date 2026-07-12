@@ -37,6 +37,8 @@ void ATower::BeginPlay()
 	}
 	
 	InitialTurretRotation = this->GetTurretComponent()->GetRelativeRotation();
+	
+	this->RegisterPawn();
 }
 
 void ATower::Tick(float DeltaTime)
