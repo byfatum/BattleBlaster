@@ -5,6 +5,7 @@
 #include "Projectile.h"
 #include "BasePawn.generated.h"
 
+class ABattleBlasterGameMode;
 class UCapsuleComponent;
 class UHealthComponent;
 class USceneComponent;
@@ -21,11 +22,17 @@ public:
 	FVector GetAimTargetLocation() const;
 	
 protected:
+	void BeginPlay() override;
 	void RotateTurretTo(const FVector& TargetLocation, float DeltaTime) const;
 	UStaticMeshComponent* GetTurretComponent() const;
 	void Fire();
+	void RegisterPawn();
+	void PawnDied();
 
 private:
+	UPROPERTY(VisibleAnywhere)
+	TWeakObjectPtr<ABattleBlasterGameMode> GameMode;
+	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 

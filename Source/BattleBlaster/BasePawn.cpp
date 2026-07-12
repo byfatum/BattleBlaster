@@ -1,5 +1,6 @@
 ﻿#include "BasePawn.h"
 
+#include "BattleBlasterGameMode.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
@@ -7,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "HealthComponent.h"
 #include "TurretAimingComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ABasePawn::ABasePawn()
 {
@@ -39,6 +41,14 @@ ABasePawn::ABasePawn()
 FVector ABasePawn::GetAimTargetLocation() const
 {
 	return AimTarget ? AimTarget->GetComponentLocation() : FVector::ZeroVector;
+}
+
+void ABasePawn::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	GameMode = Cast<ABattleBlasterGameMode>(UGameplayStatics::GetGameMode(this));
+	HealthComponent->OnDeath().AddUObject(this, &ABasePawn::PawnDied);
 }
 
 void ABasePawn::RotateTurretTo(const FVector& TargetLocation, float DeltaTime) const
@@ -84,4 +94,22 @@ void ABasePawn::Fire()
 			1.0f
 		);
 	}
+}
+
+void ABasePawn::RegisterPawn()
+{
+	if (GameMode.Get())
+	{
+		GameMode->RegisterPawn(this);
+	}
+}
+
+void ABasePawn::PawnDied()
+{
+	if (GameMode.Get())
+	{
+		GameMode->ActorDied(this);
+	}
+	
+	this->Destroy();
 }
