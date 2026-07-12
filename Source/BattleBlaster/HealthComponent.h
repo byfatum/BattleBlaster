@@ -11,6 +11,9 @@ class BATTLEBLASTER_API UHealthComponent : public UActorComponent
 
 public:	
 	UHealthComponent();
+	
+	DECLARE_EVENT(UHealthComponent, FOnDeathSignature)
+	FOnDeathSignature& OnDeath();
 
 protected:
 	virtual void BeginPlay() override;
@@ -25,4 +28,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Combat | Health")
 	float CurrentHealth;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Combat | Health")
+	bool bIsDead = false;
+	
+	FOnDeathSignature OnDeathDelegate;
 };
