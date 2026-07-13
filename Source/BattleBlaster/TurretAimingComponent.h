@@ -13,7 +13,7 @@ class BATTLEBLASTER_API UTurretAimingComponent : public UActorComponent
 
 public:	
 	UTurretAimingComponent();
-	void SetTurretComponent(USceneComponent* TurretСomponent);
+	void SetTurretComponent(USceneComponent* InTurretСomponent);
 	void AimAt(const FVector& TargetLocation, float DeltaTime);
 	
 private:

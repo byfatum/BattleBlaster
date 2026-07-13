@@ -4,6 +4,7 @@
 
 UTurretAimingComponent::UTurretAimingComponent()
 {
+	bAutoActivate = true;
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
@@ -14,7 +15,7 @@ void UTurretAimingComponent::SetTurretComponent(USceneComponent* InTurretCompone
 
 void UTurretAimingComponent::AimAt(const FVector& TargetLocation, float DeltaTime) 
 {
-	if (!ControlledTurretComponent) return;
+	if (!ControlledTurretComponent || !IsActive()) return;
 	
 	FVector TurretWorldLocation = ControlledTurretComponent->GetComponentLocation();
 	TurretWorldLocation.Z = TargetLocation.Z;
