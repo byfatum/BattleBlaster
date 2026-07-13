@@ -10,6 +10,11 @@ UHealthComponent::FOnDeathSignature& UHealthComponent::OnDeath()
 	return OnDeathDelegate;
 }
 
+bool UHealthComponent::IsDead() const
+{
+	return bIsDead;
+}
+
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();

@@ -14,6 +14,7 @@ public:
 	
 	DECLARE_EVENT(UHealthComponent, FOnDeathSignature)
 	FOnDeathSignature& OnDeath();
+	bool IsDead() const;
 
 protected:
 	virtual void BeginPlay() override;
