@@ -22,13 +22,14 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 private:
 	void SetupInputMappingContext();
 	void MoveInput(const struct FInputActionValue& Value);
 	void TurnInput(const struct FInputActionValue& Value);
+	void HandleTankDeath();
+	virtual void HandleDeath() override;
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<USpringArmComponent> SpringArmComponent;

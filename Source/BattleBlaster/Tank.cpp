@@ -101,3 +101,21 @@ void ATank::TurnInput(const FInputActionValue& Value)
 	const FRotator DeltaRotation(0.0, InputValue * TurnRate * DeltaTime, 0.0);
 	AddActorLocalRotation(DeltaRotation, true);
 }
+
+void ATank::HandleTankDeath()
+{
+	if (APlayerController* const PlayerController = Cast<APlayerController>(GetController()))
+	{
+		DisableInput(PlayerController);
+	}
+	
+	DisableTurretAiming();
+	SetPawnVisibility(false);
+	SetPawnNoCollision();
+	SetActorTickEnabled(false);
+}
+
+void ATank::HandleDeath()
+{
+	HandleTankDeath();
+}

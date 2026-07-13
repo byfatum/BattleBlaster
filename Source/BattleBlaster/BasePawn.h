@@ -20,6 +20,7 @@ class BATTLEBLASTER_API ABasePawn : public APawn
 public:
 	ABasePawn();
 	FVector GetAimTargetLocation() const;
+	bool IsPawnDead() const;
 	
 protected:
 	void BeginPlay() override;
@@ -28,6 +29,11 @@ protected:
 	void Fire();
 	void RegisterPawn();
 	void PawnDied();
+	void ActivateTurretAiming();
+	void DisableTurretAiming();
+	void SetPawnVisibility(const bool bNewVisibility);
+	void SetPawnNoCollision();
+	virtual void HandleDeath();
 
 private:
 	UPROPERTY(VisibleAnywhere)

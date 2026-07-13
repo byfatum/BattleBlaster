@@ -43,6 +43,11 @@ FVector ABasePawn::GetAimTargetLocation() const
 	return AimTarget ? AimTarget->GetComponentLocation() : FVector::ZeroVector;
 }
 
+bool ABasePawn::IsPawnDead() const
+{
+	return HealthComponent->IsDead();
+}
+
 void ABasePawn::BeginPlay()
 {
 	Super::BeginPlay();
@@ -111,5 +116,39 @@ void ABasePawn::PawnDied()
 		GameMode->ActorDied(this);
 	}
 	
-	this->Destroy();
+	HandleDeath();
+}
+
+void ABasePawn::ActivateTurretAiming()
+{
+	if (!TurretAimingComponent) return;
+	TurretAimingComponent->Activate();
+}
+
+void ABasePawn::DisableTurretAiming()
+{
+	if (!TurretAimingComponent) return;
+	TurretAimingComponent->Deactivate();
+}
+
+void ABasePawn::SetPawnVisibility(const bool bNewVisibility)
+{
+	if (!BaseComponent.Get() || !TurretComponent.Get()) return;
+	
+	BaseComponent->SetVisibility(bNewVisibility);
+	TurretComponent->SetVisibility(bNewVisibility);
+}
+
+void ABasePawn::SetPawnNoCollision()
+{
+	if (!CapsuleComponent.Get() || !BaseComponent.Get() || !TurretComponent.Get()) return;
+	
+	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	BaseComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	TurretComponent->SetCollisionProfileName(TEXT("NoCollision"));
+}
+
+void ABasePawn::HandleDeath()
+{
+	Destroy();
 }
