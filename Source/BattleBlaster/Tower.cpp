@@ -117,7 +117,7 @@ bool ATower::CanTrackTarget() const
 {
 	const ABasePawn* const Target = TargetPawn.Get();
 	
-	return Target && bIsTargetInRange && HasLineOfSightToTarget(Target);
+	return Target && !Target->IsPawnDead() && bIsTargetInRange && HasLineOfSightToTarget(Target);
 }
 
 bool ATower::IsAlignedToAimTarget() const
