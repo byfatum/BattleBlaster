@@ -15,6 +15,7 @@ class BATTLEBLASTER_API ABattleBlasterGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	ABattleBlasterGameMode();
 	void RegisterPawn(ABasePawn* const Pawn);
 	void ActorDied(ABasePawn* const Pawn);
 	

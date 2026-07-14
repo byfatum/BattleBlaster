@@ -1,7 +1,13 @@
 ﻿#include "BattleBlasterGameMode.h"
+#include "BattleBlasterPlayerController.h"
 #include "BasePawn.h"
 #include "Tank.h"
 #include "Tower.h"
+
+ABattleBlasterGameMode::ABattleBlasterGameMode()
+{
+	PlayerControllerClass = ABattleBlasterPlayerController::StaticClass();
+}
 
 void ABattleBlasterGameMode::RegisterPawn(ABasePawn* const Pawn)
 {
