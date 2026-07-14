@@ -89,15 +89,18 @@ void ABasePawn::Fire()
 
 		const APawn* const ProjectileInstigator = Projectile->GetInstigator();
 		
-		DrawDebugSphere(
-			GetWorld(), 
-			SocketLocation, 
-			16, 
-			16, 
-			FColor::Green, 
-			false,
-			1.0f
-		);
+		if (bShowDebugSphereDuringFire)
+		{
+			DrawDebugSphere(
+				GetWorld(), 
+				SocketLocation, 
+				16, 
+				16, 
+				FColor::Green, 
+				false,
+				1.0f
+			);
+		}
 	}
 }
 

@@ -55,9 +55,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float TurnRate = 125.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Debug")
+	UPROPERTY(EditDefaultsOnly, Category = "Debug | Cursor")
+	bool bShowDebugSphereUnderCursor = false;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Debug | Cursor")
 	float SphereRadius = 20.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Debug")
+	UPROPERTY(EditDefaultsOnly, Category = "Debug | Cursor")
 	int SphereSegments = 20;
 };

@@ -45,7 +45,11 @@ void ATank::Tick(float DeltaTime)
 	{
 		const FVector AimWorldLocation = HitResult.ImpactPoint;
 	
-		DrawDebugSphere(GetWorld(), AimWorldLocation, SphereRadius, SphereSegments, FColor::Green);
+		if (bShowDebugSphereUnderCursor)
+		{
+			DrawDebugSphere(GetWorld(), AimWorldLocation, SphereRadius, SphereSegments, FColor::Green);
+		}
+		
 		this->RotateTurretTo(AimWorldLocation, DeltaTime);
 	}
 }
@@ -107,6 +111,7 @@ void ATank::HandleTankDeath()
 	if (APlayerController* const PlayerController = Cast<APlayerController>(GetController()))
 	{
 		DisableInput(PlayerController);
+		PlayerController->bShowMouseCursor = false;
 	}
 	
 	DisableTurretAiming();

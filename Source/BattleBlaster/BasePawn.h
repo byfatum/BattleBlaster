@@ -59,4 +59,7 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Combat | Health")
 	TObjectPtr<UHealthComponent> HealthComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Debug | Fire")
+	bool bShowDebugSphereDuringFire = false;
 };
