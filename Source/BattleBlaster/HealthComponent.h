@@ -24,7 +24,7 @@ private:
 	void OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, 
 		class AController* InstigatedBy, AActor* DamageCauser );
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Combat | Health")
+	UPROPERTY(EditDefaultsOnly, Category = "Combat | Health", meta = (ClampMin = 0.0f, ToolTip = "Maximum health"))
 	float MaxHealth = 100.0f;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Combat | Health")
