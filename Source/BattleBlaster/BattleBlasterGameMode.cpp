@@ -3,6 +3,8 @@
 #include "BasePawn.h"
 #include "Tank.h"
 #include "Tower.h"
+#include "Engine/TimerHandle.h"
+#include "Kismet/GameplayStatics.h"
 
 ABattleBlasterGameMode::ABattleBlasterGameMode()
 {
@@ -25,16 +27,46 @@ void ABattleBlasterGameMode::ActorDied(ABasePawn* const Pawn)
 		
 		if (AllTowersDead())
 		{
-			UE_LOG(LogTemp, Display, TEXT("You Victory! All Towers are dead"));
+			FinishGame(EGameResult::Victory);
 		}
 	}
 	else if (ATank* const Tank = Cast<ATank>(Pawn))
 	{
-		UE_LOG(LogTemp, Display, TEXT("You Lose! Try Again"));
+		FinishGame(EGameResult::Defeat);
 	}
 }
 
 bool ABattleBlasterGameMode::AllTowersDead() const
 {
 	return AliveTowers.Num() == 0;
+}
+
+void ABattleBlasterGameMode::FinishGame(EGameResult GameResult)
+{
+	if (CurrentGameResult != EGameResult::InProgress) return;
+	CurrentGameResult = GameResult;
+	
+	if (CurrentGameResult == EGameResult::Victory)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Victory!"));
+	}
+	else if (CurrentGameResult == EGameResult::Defeat)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Defeat!"));
+	}
+	
+	FTimerHandle GameOverHandle;
+	GetWorldTimerManager().SetTimer(
+		GameOverHandle,
+		this,
+		&ABattleBlasterGameMode::RestartCurrentLevel,
+		RestartDelay,
+		false
+	);
+}
+
+void ABattleBlasterGameMode::RestartCurrentLevel() const
+{
+	const FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this);
+	UGameplayStatics::OpenLevel(this, FName(CurrentLevelName), false);
 }
