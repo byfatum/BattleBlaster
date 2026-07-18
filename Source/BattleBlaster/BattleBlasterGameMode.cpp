@@ -1,10 +1,10 @@
 ﻿#include "BattleBlasterGameMode.h"
 #include "BattleBlasterPlayerController.h"
 #include "BasePawn.h"
+#include "BattleBlasterGameInstance.h"
 #include "Tank.h"
 #include "Tower.h"
 #include "Engine/TimerHandle.h"
-#include "Kismet/GameplayStatics.h"
 
 ABattleBlasterGameMode::ABattleBlasterGameMode()
 {
@@ -36,6 +36,16 @@ void ABattleBlasterGameMode::ActorDied(ABasePawn* const Pawn)
 	}
 }
 
+void ABattleBlasterGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (UBattleBlasterGameInstance* const GameInstance = Cast<UBattleBlasterGameInstance>(GetGameInstance()))
+	{
+		GameInstance->SetCurrentLevelIndex(GetWorld());
+	}
+}
+
 bool ABattleBlasterGameMode::AllTowersDead() const
 {
 	return AliveTowers.Num() == 0;
@@ -59,14 +69,23 @@ void ABattleBlasterGameMode::FinishGame(EGameResult GameResult)
 	GetWorldTimerManager().SetTimer(
 		GameOverHandle,
 		this,
-		&ABattleBlasterGameMode::RestartCurrentLevel,
+		&ABattleBlasterGameMode::HandleGameResult,
 		RestartDelay,
 		false
 	);
 }
 
-void ABattleBlasterGameMode::RestartCurrentLevel() const
+void ABattleBlasterGameMode::HandleGameResult() const
 {
-	const FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this);
-	UGameplayStatics::OpenLevel(this, FName(CurrentLevelName), false);
+	if (UBattleBlasterGameInstance* const GameInstance = Cast<UBattleBlasterGameInstance>(GetGameInstance()))
+	{
+		if (CurrentGameResult == EGameResult::Victory)
+		{
+			GameInstance->LoadNextLevel();
+		}
+		else if (CurrentGameResult == EGameResult::Defeat)
+		{
+			GameInstance->RestartCurrentLevel();
+		}
+	}
 }

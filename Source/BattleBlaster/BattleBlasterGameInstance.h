@@ -15,15 +15,23 @@ class BATTLEBLASTER_API UBattleBlasterGameInstance : public UPlatformGameInstanc
 public:
 	void SetCurrentLevelIndex(const UWorld* const CurrentWorld);
 	void LoadNextLevel();
-	void RestartCurrentLevel();
+	void RestartCurrentLevel() const;
+	
+protected:
+	virtual void Init();
 	
 private:
-	void ChangeLevel() const;
-	void RestartGame() const;
+	void ChangeLevel();
+	void RestartCampaign() const;
+	void RestartCurrentLevelByPackageName() const;
+	bool ValidateCampaignMaps() const;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Levels | LevelIndices")
-	int32 CurrentLevelIndex;
+	UPROPERTY(VisibleAnywhere, Category = "Campaign")
+	int32 CurrentLevelIndex = INDEX_NONE;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Levels | Maps")
+	UPROPERTY(EditDefaultsOnly, Category = "Campaign")
 	TArray<TSoftObjectPtr<UWorld>> CampaignMaps;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Campaign")
+	bool bIsCampaignValid;
 };

@@ -26,10 +26,13 @@ public:
 	void RegisterPawn(ABasePawn* const Pawn);
 	void ActorDied(ABasePawn* const Pawn);
 	
+protected:
+	virtual void BeginPlay() override;
+	
 private:
 	bool AllTowersDead() const;
 	void FinishGame(EGameResult GameResult);
-	void RestartCurrentLevel() const;
+	void HandleGameResult() const;
 	
 	TSet<TWeakObjectPtr<ATower>> AliveTowers;
 	EGameResult CurrentGameResult = EGameResult::InProgress;
