@@ -20,9 +20,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	virtual void ApplyGameplayEnabledState(bool NewGameplayEnabledState) override;
 
 private:
 	void SetupInputMappingContext();
@@ -30,6 +30,7 @@ private:
 	void TurnInput(const struct FInputActionValue& Value);
 	void HandleTankDeath();
 	virtual void HandleDeath() override;
+	void SetPlayerControllerActive(bool bActive);
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<USpringArmComponent> SpringArmComponent;

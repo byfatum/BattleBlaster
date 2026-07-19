@@ -108,13 +108,8 @@ void ATank::TurnInput(const FInputActionValue& Value)
 
 void ATank::HandleTankDeath()
 {
-	if (APlayerController* const PlayerController = Cast<APlayerController>(GetController()))
-	{
-		DisableInput(PlayerController);
-		PlayerController->bShowMouseCursor = false;
-	}
-	
-	DisableTurretAiming();
+	SetPlayerControllerActive(false);
+	SetTurretAimingActive(false);
 	SetPawnVisibility(false);
 	SetPawnNoCollision();
 	SetActorTickEnabled(false);
@@ -123,4 +118,20 @@ void ATank::HandleTankDeath()
 void ATank::HandleDeath()
 {
 	HandleTankDeath();
+}
+
+void ATank::SetPlayerControllerActive(bool bActive)
+{
+	if (APlayerController* const PlayerController = Cast<APlayerController>(GetController()))
+	{
+		bActive ? EnableInput(PlayerController) : DisableInput(PlayerController);
+		PlayerController->bShowMouseCursor = bActive;
+	}
+}
+
+void ATank::ApplyGameplayEnabledState(bool NewGameplayEnabledState)
+{
+	Super::ApplyGameplayEnabledState(NewGameplayEnabledState);
+	
+	SetPlayerControllerActive(NewGameplayEnabledState);
 }
