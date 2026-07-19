@@ -25,45 +25,35 @@ void UBattleBlasterGameInstance::SetCurrentLevelIndex(const UWorld* const Curren
 
 void UBattleBlasterGameInstance::LoadNextLevel()
 {
+	/*
+	 bIsCampaignValid is: 
+	 1) Campaign empty; 2) Campaign[Index] can be IsNull(); 
+	 3) Duplicate map package.
+	*/
 	if (!bIsCampaignValid)
 	{
-		
+		UE_LOG(
+			LogTemp, 
+			Error, 
+			TEXT("CampaignMaps Configuration is not valid")
+		);
+			
+		RestartCurrentLevelByPackageName();
 	}
 	else if (!CampaignMaps.IsValidIndex(CurrentLevelIndex))
 	{
+		UE_LOG(
+			LogTemp,
+			Display,
+			TEXT("Campaign Configuration is valid, but current map is not registered in CampaignMaps")
+		);
 		
+		RestartCurrentLevelByPackageName();
 	}
 	else if (CampaignMaps.IsValidIndex(CurrentLevelIndex))
 	{
-		
-	}
-	/*if (bIsCampaignValid && CampaignMaps.IsValidIndex(CurrentLevelIndex))
-	{
 		ChangeLevel();
 	}
-	else 
-	{
-		if (bIsCampaignValid && !CampaignMaps.IsValidIndex(CurrentLevelIndex))
-		{
-			UE_LOG(
-				LogTemp, 
-				Display, 
-				TEXT("CampaignMaps Configuration is valid, but current map is not registered in CampaignMaps")
-			);
-		
-			RestartCurrentLevelByPackageName();
-		}
-		else
-		{
-			UE_LOG(
-				LogTemp, 
-				Error, 
-				TEXT("CampaignMaps Configuration is not valid")
-			);
-			
-			RestartCurrentLevelByPackageName();
-		}
-	}*/
 }
 
 void UBattleBlasterGameInstance::RestartCurrentLevel() const
@@ -78,30 +68,21 @@ void UBattleBlasterGameInstance::Init()
 	bIsCampaignValid = ValidateCampaignMaps();
 }
 
+/*
+1) Campaign is not empty; 2) Campaign[Index] cant be IsNull(); 
+3) Campaign dont have duplicate map package; 4) Index is valid.
+*/
 void UBattleBlasterGameInstance::ChangeLevel() 
 {
 	if (CurrentLevelIndex >= 0 && CurrentLevelIndex < CampaignMaps.Num() - 1)
 	{
-		if (const int32 NextLevelIndex = CurrentLevelIndex + 1; !CampaignMaps[NextLevelIndex].IsNull())
-		{
-			UGameplayStatics::OpenLevelBySoftObjectPtr(this, CampaignMaps[NextLevelIndex]);
-		} 
-		else 
-		{
-			UE_LOG(
-				LogTemp, 
-				Error, 
-				TEXT("Invalid CampaignMaps Configuration. CampaignMaps[%d] IsNull"),
-				NextLevelIndex
-			);
-			
-			RestartCurrentLevelByPackageName();
-		}
-	}
+		const int32 NextLevelIndex = CurrentLevelIndex + 1;
+		UGameplayStatics::OpenLevelBySoftObjectPtr(this, CampaignMaps[NextLevelIndex]);
+	} 
 	else if (CurrentLevelIndex == CampaignMaps.Num() - 1)
 	{
 		RestartCampaign();
-	} 
+	}
 }
 
 void UBattleBlasterGameInstance::RestartCampaign() const
