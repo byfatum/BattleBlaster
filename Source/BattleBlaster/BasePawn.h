@@ -23,17 +23,18 @@ public:
 	bool IsPawnDead() const;
 	
 protected:
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 	void RotateTurretTo(const FVector& TargetLocation, float DeltaTime) const;
 	UStaticMeshComponent* GetTurretComponent() const;
 	void Fire();
 	void RegisterPawn();
 	void PawnDied();
-	void ActivateTurretAiming();
-	void DisableTurretAiming();
+	void SetTurretAimingActive(bool bActive);
 	void SetPawnVisibility(const bool bNewVisibility);
 	void SetPawnNoCollision();
 	virtual void HandleDeath();
+	void HandleGameplayEnabledChanged();
+	virtual void ApplyGameplayEnabledState(bool NewGameplayEnabledState);
 
 private:
 	UPROPERTY(VisibleAnywhere)

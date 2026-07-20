@@ -54,6 +54,12 @@ void ABasePawn::BeginPlay()
 	
 	GameMode = Cast<ABattleBlasterGameMode>(UGameplayStatics::GetGameMode(this));
 	HealthComponent->OnDeath().AddUObject(this, &ABasePawn::PawnDied);
+	
+	if (GameMode.Get())
+	{
+		GameMode->OnGameplayEnabledChanged().AddUObject(this, &ABasePawn::HandleGameplayEnabledChanged);
+		ApplyGameplayEnabledState(GameMode->IsGameplayEnabled());
+	}
 }
 
 void ABasePawn::RotateTurretTo(const FVector& TargetLocation, float DeltaTime) const
@@ -71,7 +77,7 @@ void ABasePawn::Fire()
 {
 	const FName MuzzleSocketName("Muzzle");
 	
-	if (TurretComponent->DoesSocketExist(MuzzleSocketName))
+	if (GameMode.Get() && GameMode->IsGameplayEnabled() && TurretComponent->DoesSocketExist(MuzzleSocketName))
 	{
 		const FVector SocketLocation = TurretComponent->GetSocketLocation(MuzzleSocketName);
 		const FRotator SocketRotation = TurretComponent->GetSocketRotation(MuzzleSocketName);
@@ -80,15 +86,13 @@ void ABasePawn::Fire()
 		SpawnParameters.Owner = this;
 		SpawnParameters.Instigator = this;
 		
-		const AProjectile* const Projectile = GetWorld()->SpawnActor<AProjectile>(
+		GetWorld()->SpawnActor<AProjectile>(
 			ProjectileType, 
 			SocketLocation, 
 			SocketRotation,
 			SpawnParameters
 			);
 
-		const APawn* const ProjectileInstigator = Projectile->GetInstigator();
-		
 		if (bShowDebugSphereDuringFire)
 		{
 			DrawDebugSphere(
@@ -122,16 +126,10 @@ void ABasePawn::PawnDied()
 	HandleDeath();
 }
 
-void ABasePawn::ActivateTurretAiming()
+void ABasePawn::SetTurretAimingActive(bool bActive)
 {
 	if (!TurretAimingComponent) return;
-	TurretAimingComponent->Activate();
-}
-
-void ABasePawn::DisableTurretAiming()
-{
-	if (!TurretAimingComponent) return;
-	TurretAimingComponent->Deactivate();
+	bActive ? TurretAimingComponent->Activate() : TurretAimingComponent->Deactivate();
 }
 
 void ABasePawn::SetPawnVisibility(const bool bNewVisibility)
@@ -154,4 +152,15 @@ void ABasePawn::SetPawnNoCollision()
 void ABasePawn::HandleDeath()
 {
 	Destroy();
+}
+
+void ABasePawn::HandleGameplayEnabledChanged()
+{
+	ApplyGameplayEnabledState(GameMode->IsGameplayEnabled());
+}
+
+void ABasePawn::ApplyGameplayEnabledState(bool NewGameplayEnabledState)
+{
+	SetTurretAimingActive(NewGameplayEnabledState);
+	SetActorTickEnabled(NewGameplayEnabledState);
 }
