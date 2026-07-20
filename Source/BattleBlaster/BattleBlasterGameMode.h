@@ -25,6 +25,10 @@ public:
 	ABattleBlasterGameMode();
 	void RegisterPawn(ABasePawn* const Pawn);
 	void ActorDied(ABasePawn* const Pawn);
+	bool IsGameplayEnabled() const;
+	
+	DECLARE_EVENT(ABattleBlasterGameMode, FOnGameplayEnabledChanged)
+	FOnGameplayEnabledChanged& OnGameplayEnabledChanged();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -33,10 +37,20 @@ private:
 	bool AllTowersDead() const;
 	void FinishGame(EGameResult GameResult);
 	void HandleGameResult() const;
+	void SetGameplayEnabled(bool NewGameplayEnabled);
+	void OnCountDownTimerTimeout();
 	
 	TSet<TWeakObjectPtr<ATower>> AliveTowers;
 	EGameResult CurrentGameResult = EGameResult::InProgress;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Time", meta = (ClampMin = 0.0f));
 	float RestartDelay = 3.0f;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
+	bool bIsGameplayEnabled = false;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
+	float CountDownDelay = 3.0f;
+	
+	FOnGameplayEnabledChanged OnGameplayEnabledChangedSignature;
 };

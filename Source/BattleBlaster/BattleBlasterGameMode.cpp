@@ -36,6 +36,16 @@ void ABattleBlasterGameMode::ActorDied(ABasePawn* const Pawn)
 	}
 }
 
+ABattleBlasterGameMode::FOnGameplayEnabledChanged& ABattleBlasterGameMode::OnGameplayEnabledChanged() 
+{
+	return OnGameplayEnabledChangedSignature;
+}
+
+bool ABattleBlasterGameMode::IsGameplayEnabled() const
+{
+	return bIsGameplayEnabled;
+}
+
 void ABattleBlasterGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -44,6 +54,15 @@ void ABattleBlasterGameMode::BeginPlay()
 	{
 		GameInstance->SetCurrentLevelIndex(GetWorld());
 	}
+	
+	FTimerHandle GameplayStart;
+	GetWorldTimerManager().SetTimer(
+		GameplayStart, 
+		this, 
+		&ABattleBlasterGameMode::OnCountDownTimerTimeout,
+		CountDownDelay,
+		false
+	);
 }
 
 bool ABattleBlasterGameMode::AllTowersDead() const
@@ -88,4 +107,15 @@ void ABattleBlasterGameMode::HandleGameResult() const
 			GameInstance->RestartCurrentLevel();
 		}
 	}
+}
+
+void ABattleBlasterGameMode::SetGameplayEnabled(bool NewGameplayEnabled)
+{
+	bIsGameplayEnabled = NewGameplayEnabled;
+	OnGameplayEnabledChangedSignature.Broadcast();
+}
+
+void ABattleBlasterGameMode::OnCountDownTimerTimeout()
+{
+	SetGameplayEnabled(true);
 }
