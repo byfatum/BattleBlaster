@@ -26,9 +26,13 @@ public:
 	void RegisterPawn(ABasePawn* const Pawn);
 	void ActorDied(ABasePawn* const Pawn);
 	bool IsGameplayEnabled() const;
+	EGameResult GetGameResult() const;
 	
 	DECLARE_EVENT(ABattleBlasterGameMode, FOnGameplayEnabledChanged)
 	FOnGameplayEnabledChanged& OnGameplayEnabledChanged();
+	
+	DECLARE_EVENT(ABattleBlasterGameMode, FOnGameResultChanged)
+	FOnGameResultChanged& OnGameResultChanged();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -53,4 +57,5 @@ private:
 	float CountDownDelay = 3.0f;
 	
 	FOnGameplayEnabledChanged OnGameplayEnabledChangedSignature;
+	FOnGameResultChanged OnGameResultChangedSignature;
 };

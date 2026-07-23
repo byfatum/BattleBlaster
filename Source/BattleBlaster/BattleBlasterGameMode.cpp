@@ -41,9 +41,19 @@ ABattleBlasterGameMode::FOnGameplayEnabledChanged& ABattleBlasterGameMode::OnGam
 	return OnGameplayEnabledChangedSignature;
 }
 
+ABattleBlasterGameMode::FOnGameResultChanged& ABattleBlasterGameMode::OnGameResultChanged()
+{
+	return OnGameResultChangedSignature;
+}
+
 bool ABattleBlasterGameMode::IsGameplayEnabled() const
 {
 	return bIsGameplayEnabled;
+}
+
+EGameResult ABattleBlasterGameMode::GetGameResult() const
+{
+	return CurrentGameResult;
 }
 
 void ABattleBlasterGameMode::BeginPlay()
@@ -83,6 +93,8 @@ void ABattleBlasterGameMode::FinishGame(EGameResult GameResult)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Defeat!"));
 	}
+	
+	OnGameResultChangedSignature.Broadcast();
 	
 	FTimerHandle GameOverHandle;
 	GetWorldTimerManager().SetTimer(
