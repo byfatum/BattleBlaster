@@ -46,6 +46,11 @@ ABattleBlasterGameMode::FOnGameResultChanged& ABattleBlasterGameMode::OnGameResu
 	return OnGameResultChangedSignature;
 }
 
+ABattleBlasterGameMode::FOnCountDownDelayChanged& ABattleBlasterGameMode::OnCountDownDelayChanged()
+{
+	return OnCountDownDelayChangedSignature;
+}
+
 bool ABattleBlasterGameMode::IsGameplayEnabled() const
 {
 	return bIsGameplayEnabled;
@@ -54,6 +59,11 @@ bool ABattleBlasterGameMode::IsGameplayEnabled() const
 EGameResult ABattleBlasterGameMode::GetGameResult() const
 {
 	return CurrentGameResult;
+}
+
+float ABattleBlasterGameMode::GetRemainingCountDownSeconds() const
+{
+	return RemainingCountDownSeconds;
 }
 
 void ABattleBlasterGameMode::BeginPlay()
@@ -65,13 +75,14 @@ void ABattleBlasterGameMode::BeginPlay()
 		GameInstance->SetCurrentLevelIndex(GetWorld());
 	}
 	
-	FTimerHandle GameplayStart;
+	RemainingCountDownSeconds = GameplayCountDownDelaySeconds;
+	
 	GetWorldTimerManager().SetTimer(
-		GameplayStart, 
+		GameplayStartTimerHandle, 
 		this, 
 		&ABattleBlasterGameMode::OnCountDownTimerTimeout,
-		CountDownDelay,
-		false
+		1.0f,
+		true
 	);
 }
 
@@ -101,7 +112,7 @@ void ABattleBlasterGameMode::FinishGame(EGameResult GameResult)
 		GameOverHandle,
 		this,
 		&ABattleBlasterGameMode::HandleGameResult,
-		RestartDelay,
+		RestartLevelDelay,
 		false
 	);
 }
@@ -121,13 +132,20 @@ void ABattleBlasterGameMode::HandleGameResult() const
 	}
 }
 
-void ABattleBlasterGameMode::SetGameplayEnabled(bool NewGameplayEnabled)
+void ABattleBlasterGameMode::SetGameplayEnabled(bool bNewGameplayEnabled)
 {
-	bIsGameplayEnabled = NewGameplayEnabled;
+	bIsGameplayEnabled = bNewGameplayEnabled;
 	OnGameplayEnabledChangedSignature.Broadcast();
 }
 
 void ABattleBlasterGameMode::OnCountDownTimerTimeout()
 {
-	SetGameplayEnabled(true);
+	--RemainingCountDownSeconds;
+	OnCountDownDelayChangedSignature.Broadcast();
+	
+	if (RemainingCountDownSeconds <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(GameplayStartTimerHandle);
+		SetGameplayEnabled(true);
+	} 
 }

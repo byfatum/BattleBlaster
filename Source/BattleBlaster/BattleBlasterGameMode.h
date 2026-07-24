@@ -27,12 +27,16 @@ public:
 	void ActorDied(ABasePawn* const Pawn);
 	bool IsGameplayEnabled() const;
 	EGameResult GetGameResult() const;
+	float GetRemainingCountDownSeconds() const;
 	
 	DECLARE_EVENT(ABattleBlasterGameMode, FOnGameplayEnabledChanged)
 	FOnGameplayEnabledChanged& OnGameplayEnabledChanged();
 	
 	DECLARE_EVENT(ABattleBlasterGameMode, FOnGameResultChanged)
 	FOnGameResultChanged& OnGameResultChanged();
+	
+	DECLARE_EVENT(ABattleBlasterGameMode, FOnCountDownDelayChanged)
+	FOnCountDownDelayChanged& OnCountDownDelayChanged();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -48,14 +52,18 @@ private:
 	EGameResult CurrentGameResult = EGameResult::InProgress;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Time", meta = (ClampMin = 0.0f));
-	float RestartDelay = 3.0f;
+	float RestartLevelDelay = 3.0f;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	bool bIsGameplayEnabled = false;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
-	float CountDownDelay = 3.0f;
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay", meta = (ClampMin = 4.0f))
+	float GameplayCountDownDelaySeconds = 4.0f;
+	 
+	float RemainingCountDownSeconds;
+	FTimerHandle GameplayStartTimerHandle;
 	
 	FOnGameplayEnabledChanged OnGameplayEnabledChangedSignature;
 	FOnGameResultChanged OnGameResultChangedSignature;
+	FOnCountDownDelayChanged OnCountDownDelayChangedSignature;
 };
