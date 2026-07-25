@@ -40,4 +40,3 @@ void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const c
 		}
 	}
 }
-

@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Projectile.h"
+#include "Combat/Projectile.h"
 #include "BasePawn.generated.h"
 
 class ABattleBlasterGameMode;

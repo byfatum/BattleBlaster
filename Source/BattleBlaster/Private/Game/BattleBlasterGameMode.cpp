@@ -1,9 +1,9 @@
 ﻿#include "BattleBlasterGameMode.h"
-#include "BattleBlasterPlayerController.h"
-#include "BasePawn.h"
+#include "Player/BattleBlasterPlayerController.h"
+#include "Pawns/BasePawn.h"
 #include "BattleBlasterGameInstance.h"
-#include "Tank.h"
-#include "Tower.h"
+#include "Pawns/Tank.h"
+#include "Pawns/Tower.h"
 #include "Engine/TimerHandle.h"
 
 ABattleBlasterGameMode::ABattleBlasterGameMode()

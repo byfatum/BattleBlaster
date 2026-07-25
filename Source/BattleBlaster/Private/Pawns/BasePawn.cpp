@@ -1,13 +1,13 @@
 ﻿#include "BasePawn.h"
 
-#include "BattleBlasterGameMode.h"
+#include "Game/BattleBlasterGameMode.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
-#include "HealthComponent.h"
-#include "TurretAimingComponent.h"
+#include "Components/HealthComponent.h"
+#include "Components/TurretAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 ABasePawn::ABasePawn()

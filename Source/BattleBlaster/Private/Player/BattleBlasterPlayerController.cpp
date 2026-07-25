@@ -1,7 +1,7 @@
 #include "BattleBlasterPlayerController.h"
-#include "BattleBlasterGameMode.h"
+#include "Game/BattleBlasterGameMode.h"
 #include "Kismet/GameplayStatics.h"
-#include "ScreenMessage.h"
+#include "UI/ScreenMessage.h"
 
 #define LOCTEXT_NAMESPACE "BattleBlasterPlayerController"
 

@@ -2,9 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-
 #include "TurretAimingComponent.generated.h"
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLEBLASTER_API UTurretAimingComponent : public UActorComponent

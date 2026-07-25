@@ -1,5 +1,5 @@
 #include "Projectile.h"
-#include "BasePawn.h"
+#include "Pawns/BasePawn.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/EngineTypes.h"
 #include "GameFramework/ProjectileMovementComponent.h"
