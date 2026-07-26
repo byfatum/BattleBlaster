@@ -6,6 +6,8 @@
 
 class UStaticMeshComponent;
 class UProjectileMovementComponent;
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class BATTLEBLASTER_API AProjectile : public AActor
@@ -32,4 +34,10 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat | Damage")
 	float ProjectileDamage = 25.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TObjectPtr<UNiagaraComponent> TrailEffectComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> HitEffect;
 };

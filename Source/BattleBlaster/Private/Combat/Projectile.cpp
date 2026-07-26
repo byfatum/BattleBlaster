@@ -4,6 +4,8 @@
 #include "Engine/EngineTypes.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 AProjectile::AProjectile()
 {
@@ -20,6 +22,9 @@ AProjectile::AProjectile()
 	ProjectileMovementComponent->MaxSpeed = 1000.0f;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 	ProjectileMovementComponent->bShouldBounce = false;
+	
+	TrailEffectComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("TrailEffectComponent"));
+	TrailEffectComponent->SetupAttachment(GetRootComponent());
 }
 
 void AProjectile::Tick(float DeltaTime)
@@ -49,8 +54,18 @@ void AProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* Othe
 			ProjectileOwner->GetInstigatorController(), 
 			this,
 			UDamageType::StaticClass()
-			);
+		);
 	}
 	
 	this->Destroy();
+	
+	if (HitEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(), 
+			HitEffect, 
+			Hit.ImpactPoint,
+			Hit.ImpactNormal.Rotation()
+		);
+	}
 }
