@@ -57,8 +57,6 @@ void AProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* Othe
 		);
 	}
 	
-	this->Destroy();
-	
 	if (HitEffect)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
@@ -68,4 +66,6 @@ void AProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* Othe
 			Hit.ImpactNormal.Rotation()
 		);
 	}
+	
+	this->Destroy();
 }
