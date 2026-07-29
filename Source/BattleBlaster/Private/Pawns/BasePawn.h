@@ -11,6 +11,7 @@ class UHealthComponent;
 class USceneComponent;
 class UStaticMeshComponent;
 class UTurretAimingComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class BATTLEBLASTER_API ABasePawn : public APawn
@@ -60,6 +61,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Combat | Health")
 	TObjectPtr<UHealthComponent> HealthComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> DeathEffect;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Debug | Fire")
 	bool bShowDebugSphereDuringFire = false;

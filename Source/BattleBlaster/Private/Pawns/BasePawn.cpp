@@ -9,6 +9,7 @@
 #include "Components/HealthComponent.h"
 #include "Components/TurretAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
 
 ABasePawn::ABasePawn()
 {
@@ -121,6 +122,16 @@ void ABasePawn::PawnDied()
 	if (GameMode.Get())
 	{
 		GameMode->ActorDied(this);
+	}
+	
+	if (DeathEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			DeathEffect,
+			GetActorLocation(),
+			GetActorRotation()
+		);
 	}
 	
 	HandleDeath();
