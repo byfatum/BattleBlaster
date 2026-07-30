@@ -134,6 +134,16 @@ void ABasePawn::PawnDied()
 		);
 	}
 	
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			DeathSound,
+			GetActorLocation(),
+			GetActorRotation()
+		);
+	}
+	
 	HandleDeath();
 }
 

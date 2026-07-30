@@ -12,6 +12,7 @@ class USceneComponent;
 class UStaticMeshComponent;
 class UTurretAimingComponent;
 class UNiagaraSystem;
+class USoundBase;
 
 UCLASS()
 class BATTLEBLASTER_API ABasePawn : public APawn
@@ -64,6 +65,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> DeathEffect;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	TObjectPtr<USoundBase> DeathSound;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Debug | Fire")
 	bool bShowDebugSphereDuringFire = false;
