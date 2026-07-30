@@ -9,7 +9,7 @@
 
 AProjectile::AProjectile()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileComponent"));
 	SetRootComponent(ProjectileMesh);
@@ -27,16 +27,21 @@ AProjectile::AProjectile()
 	TrailEffectComponent->SetupAttachment(GetRootComponent());
 }
 
-void AProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnComponentHit);
+	
+	if (LaunchSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this, 
+			LaunchSound, 
+			GetActorLocation(),
+			GetActorRotation()
+		);
+	}
 }
 
 void AProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
@@ -62,6 +67,16 @@ void AProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* Othe
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 			GetWorld(), 
 			HitEffect, 
+			Hit.ImpactPoint,
+			Hit.ImpactNormal.Rotation()
+		);
+	}
+	
+	if (HitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this, 
+			HitSound,
 			Hit.ImpactPoint,
 			Hit.ImpactNormal.Rotation()
 		);

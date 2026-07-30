@@ -8,6 +8,7 @@ class UStaticMeshComponent;
 class UProjectileMovementComponent;
 class UNiagaraComponent;
 class UNiagaraSystem;
+class USoundBase;
 
 UCLASS()
 class BATTLEBLASTER_API AProjectile : public AActor
@@ -16,7 +17,6 @@ class BATTLEBLASTER_API AProjectile : public AActor
 	
 public:	
 	AProjectile();
-	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -40,4 +40,10 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> HitEffect;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	TObjectPtr<USoundBase> LaunchSound;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	TObjectPtr<USoundBase> HitSound;
 };
