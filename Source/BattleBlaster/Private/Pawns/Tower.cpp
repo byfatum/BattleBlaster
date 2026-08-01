@@ -102,13 +102,17 @@ bool ATower::HasLineOfSightToTarget(const ABasePawn* const Target) const
 	
 	const bool bHasLineOfSight = bHit && OutHit.GetActor() == Target;
 	
-	DrawDebugLine(
-		GetWorld(), 
-		SightOrigin->GetComponentLocation(), 
-		Target->GetAimTargetLocation(), 
-		bHasLineOfSight ? FColor::Green : FColor::Red, 
-		false, 
-		0.1f);
+	if (bShowLineOfSight)
+	{
+		DrawDebugLine(
+			GetWorld(), 
+			SightOrigin->GetComponentLocation(), 
+			Target->GetAimTargetLocation(), 
+			bHasLineOfSight ? FColor::Green : FColor::Red, 
+			false, 
+			0.1f
+		);
+	}
 	
 	return bHasLineOfSight;
 }

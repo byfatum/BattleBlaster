@@ -52,6 +52,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Tracking")
 	float ReturnRotationSpeed = 100.0f;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Tracking")
+	bool bShowLineOfSight = false;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Aiming")
 	float AimLockDuration = 2.0f;
 	
