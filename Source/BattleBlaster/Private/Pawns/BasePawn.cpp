@@ -1,15 +1,16 @@
 ﻿#include "BasePawn.h"
 
-#include "Game/BattleBlasterGameMode.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
-#include "Engine/World.h"
-#include "GameFramework/Actor.h"
 #include "Components/HealthComponent.h"
 #include "Components/TurretAimingComponent.h"
+#include "Engine/World.h"
+#include "Game/BattleBlasterGameMode.h"
+#include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Player/BattleBlasterPlayerController.h"
 
 ABasePawn::ABasePawn()
 {
@@ -142,6 +143,12 @@ void ABasePawn::PawnDied()
 			GetActorLocation(),
 			GetActorRotation()
 		);
+	}
+	
+	if (ABattleBlasterPlayerController* const PlayerController = 
+		Cast<ABattleBlasterPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	{
+		PlayerController->StartDeathCameraShake();
 	}
 	
 	HandleDeath();
