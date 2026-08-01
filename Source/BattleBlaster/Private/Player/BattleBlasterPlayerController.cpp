@@ -11,6 +11,22 @@ ABattleBlasterPlayerController::ABattleBlasterPlayerController()
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
+void ABattleBlasterPlayerController::StartHitCameraShake() const
+{
+	if (PlayerCameraManager && HitCameraShake)
+	{
+		PlayerCameraManager->StartCameraShake(HitCameraShake, 1.0f);
+	}
+}
+
+void ABattleBlasterPlayerController::StartDeathCameraShake() const
+{
+	if (PlayerCameraManager && DeathCameraShake)
+	{
+		PlayerCameraManager->StartCameraShake(DeathCameraShake, 1.0f);
+	}
+}
+
 void ABattleBlasterPlayerController::BeginPlay()
 {
 	Super::BeginPlay();

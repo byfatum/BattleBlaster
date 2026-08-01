@@ -7,6 +7,7 @@
 class ABattleBlasterGameMode;
 class UScreenMessage;
 enum class EGameResult : uint8;
+class UCameraShakeBase;
 
 UCLASS()
 class BATTLEBLASTER_API ABattleBlasterPlayerController : public APlayerController
@@ -15,6 +16,9 @@ class BATTLEBLASTER_API ABattleBlasterPlayerController : public APlayerControlle
 	
 public:
 	ABattleBlasterPlayerController();
+	
+	void StartHitCameraShake() const;
+	void StartDeathCameraShake() const;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -36,4 +40,10 @@ private:
 	
 	UPROPERTY(Transient)
 	TObjectPtr<UScreenMessage> ScreenMessageObject;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "CameraShake")
+	TSubclassOf<UCameraShakeBase> HitCameraShake;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "CameraShake")
+	TSubclassOf<UCameraShakeBase> DeathCameraShake;
 };
