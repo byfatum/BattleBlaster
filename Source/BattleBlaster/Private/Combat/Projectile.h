@@ -20,6 +20,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void LifeSpanExpired() override;
 
 private:
 	UFUNCTION()
@@ -46,4 +47,10 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	TObjectPtr<USoundBase> HitSound;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> ExpirationEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	TObjectPtr<USoundBase> ExpirationSound;
 };

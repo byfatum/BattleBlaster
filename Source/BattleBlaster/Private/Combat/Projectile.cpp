@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Player/BattleBlasterPlayerController.h"
 
 AProjectile::AProjectile()
 {
@@ -44,8 +45,36 @@ void AProjectile::BeginPlay()
 	}
 }
 
+void AProjectile::LifeSpanExpired()
+{
+	const FVector ExpirationLocation = GetActorLocation();
+	const FRotator ExpirationRotation = GetActorRotation();
+
+	if (ExpirationEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			ExpirationEffect,
+			ExpirationLocation,
+			ExpirationRotation
+		);
+	}
+
+	if (ExpirationSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			ExpirationSound,
+			ExpirationLocation,
+			ExpirationRotation
+		);
+	}
+	
+	Super::LifeSpanExpired();
+}
+
 void AProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
-		UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+                                 UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	const AActor* const ProjectileOwner = this->GetOwner();
 	
@@ -80,6 +109,12 @@ void AProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* Othe
 			Hit.ImpactPoint,
 			Hit.ImpactNormal.Rotation()
 		);
+	}
+	
+	if (ABattleBlasterPlayerController* const PlayerController = 
+		Cast<ABattleBlasterPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	{
+		PlayerController->StartHitCameraShake();
 	}
 	
 	this->Destroy();
