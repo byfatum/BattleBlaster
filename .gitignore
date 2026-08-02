@@ -16,3 +16,6 @@ Binaries/
 
 # JetBrains Rider
 .idea/
+
+# Project Build
+Build/Windows/FileOpenOrder/
